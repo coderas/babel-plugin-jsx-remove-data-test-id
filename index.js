@@ -11,7 +11,7 @@ function simpleCache(f) {
   };
 }
 
-export default function EncapsulateJsx({ types: t }) {
+export default function RemoveQAClasses({ types: t }) {
 
   return {
     visitor: {
@@ -22,7 +22,7 @@ export default function EncapsulateJsx({ types: t }) {
 
         const validClassNameAttributes = node => {
           const isIdent = (
-            t.isIdentifier(n, { name: 'className' })
+            t.isIdentifier(n, { name: 'className' }) // we might not need this line really
             || t.isJSXIdentifier(node, { name: 'className' })
           );
           return t.isJSXAttribute(a) && isIdent;

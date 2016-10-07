@@ -1,1 +1,1 @@
-## babel plugin to remove qa-classes
+## babel plugin to remove-qa-classes
