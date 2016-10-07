@@ -7,12 +7,12 @@ export default function RemoveQAClasses({ types: t }) {
           return;
         }
 
-        const validClassNameAttributes = node => {
+        const validClassNameAttributes = attr => {
           const isIdent = (
-            t.isIdentifier(n, { name: 'className' }) // we might not need this line really
-            || t.isJSXIdentifier(node, { name: 'className' })
+            t.isIdentifier(attr.name, { name: 'className' }) // we might not need this line really
+            || t.isJSXIdentifier(attr.name, { name: 'className' })
           );
-          return t.isJSXAttribute(a) && isIdent;
+          return t.isJSXAttribute(attr) && isIdent;
         };
 
         const classnameAttributes = path.node.attributes
@@ -20,7 +20,6 @@ export default function RemoveQAClasses({ types: t }) {
 
         if (!classnameAttributes.length) {    
           // we have nothing to modifiy    
-          node.hasStrippedQAClass = true;           
           return;
         }
 
