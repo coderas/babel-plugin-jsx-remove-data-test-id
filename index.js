@@ -1,16 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-
-function simpleCache(f) {
-  const cache = {};
-  return (k) => {
-    if (!cache[k]) {
-      cache[k] = f(k);
-    }
-    return cache[k];
-  };
-}
-
 export default function RemoveQAClasses({ types: t }) {
 
   return {
@@ -43,9 +30,9 @@ export default function RemoveQAClasses({ types: t }) {
             const classNameRegEx = /\s?qa-([-\w])*/g;
             const node = t.jSXOpeningElement(
               path.node.name,
-              path.node.attributes.map((curAttr) => {
-                if (attr !== curAttr) {
-                  return curAttr;
+              path.node.attributes.map(currentAttr => {
+                if (attr !== currentAttr) {
+                  return currentAttr;
                 }
                 const newCssClassNameValue = attr.value.value.replace(classNameRegEx, '');
 
