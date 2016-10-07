@@ -3,6 +3,7 @@ export default function RemoveQAClasses({ types: t }) {
   return {
     visitor: {
       JSXOpeningElement: function transform(path, state) {
+
         if (path.node.hasStrippedQAClass) {
           return;
         }
@@ -36,7 +37,7 @@ export default function RemoveQAClasses({ types: t }) {
                 const newCssClassNameValue = attr.value.value.replace(classNameRegEx, '');
 
                 return t.jSXAttribute(
-                  t.jSXIdentifier(attr.name),
+                  t.jSXIdentifier(attr.name.name),
                   t.stringLiteral(newCssClassNameValue)
                 );
               }),
