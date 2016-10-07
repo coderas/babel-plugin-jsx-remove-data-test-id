@@ -9,8 +9,8 @@ export default function RemoveQAClasses({ types: t }) {
 
         const validClassNameAttributes = attr => {
           const isIdent = (
-            t.isIdentifier(attr.name, { name: 'className' }) // we might not need this line really
-            || t.isJSXIdentifier(attr.name, { name: 'className' })
+            t.isJSXIdentifier(attr.name, { name: 'className' })
+            || t.isJSXIdentifier(attr.name, { name: 'cssClassName' })
           );
           return t.isJSXAttribute(attr) && isIdent;
         };
@@ -36,7 +36,7 @@ export default function RemoveQAClasses({ types: t }) {
                 const newCssClassNameValue = attr.value.value.replace(classNameRegEx, '');
 
                 return t.jSXAttribute(
-                  t.jSXIdentifier('className'),
+                  t.jSXIdentifier(attr.name),
                   t.stringLiteral(newCssClassNameValue)
                 );
               }),
