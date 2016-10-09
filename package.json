@@ -1,10 +1,11 @@
 {
   "name": "babel-plugin-jsx-remove-qa",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "babel plugin to remove-qa-classes",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel -d dist index.js"
+    "build": "babel -d dist index.js",
+    "postinstall": "babel -d dist index.js"
   },
   "author": "Rich Gorman",
   "license": "MIT",

@@ -2,6 +2,8 @@ export default function RemoveQAClasses({ types: t }) {
   return {
     visitor: {
       JSXOpeningElement: function transform(path) {
+        const classNameRegEx = /\s?qa-([-\w])*/g;
+
         const validClassNameAttributes = attr => {
           const isIdent = (
             t.isJSXIdentifier(attr.name, { name: 'className' })
@@ -19,8 +21,6 @@ export default function RemoveQAClasses({ types: t }) {
           if (!t.isStringLiteral(attr.value)) {
             return;
           }
-
-          const classNameRegEx = /\s?qa-([-\w])*/g;
 
           const removeQAClassNames = currentAttr => {
             if (attr !== currentAttr) {
