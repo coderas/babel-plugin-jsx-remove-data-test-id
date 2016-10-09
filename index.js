@@ -2,6 +2,9 @@ export default function RemoveQAClasses({ types: t }) {
   return {
     visitor: {
       JSXOpeningElement: function transform(path) {
+        if (path.node.hasStrippedQAClass) {
+          return;
+        }
         const classNameRegEx = /\s?qa-([-\w])*/g;
 
         const validClassNameAttributes = attr => {
@@ -33,7 +36,7 @@ export default function RemoveQAClasses({ types: t }) {
               t.stringLiteral(newClassNameValue)
             );
           };
-          
+
           const attrs = path.node.attributes.map(removeQAClassNames);
 
           const node = t.jSXOpeningElement(
@@ -41,6 +44,7 @@ export default function RemoveQAClasses({ types: t }) {
             attrs,
             path.node.selfClosing
           );
+          node.hasStrippedQAClass = true;
           path.replaceWith(node);
         });
       }
