@@ -1,51 +1,47 @@
 export default function RemoveQAClasses({ types: t }) {
-
   return {
     visitor: {
-      JSXOpeningElement: function transform(path, state) {
-
-        if (path.node.hasStrippedQAClass) {
-          return;
-        }
-
+      JSXOpeningElement: function transform(path) {
         const validClassNameAttributes = attr => {
           const isIdent = (
             t.isJSXIdentifier(attr.name, { name: 'className' })
-            || t.isJSXIdentifier(attr.name, { name: 'cssClassName' })
           );
           return t.isJSXAttribute(attr) && isIdent;
         };
 
-        const classnameAttributes = path.node.attributes
-          .filter(validClassNameAttributes);
+        const classnameAttributes = path.node.attributes.filter(validClassNameAttributes);
 
-        if (!classnameAttributes.length) {    
-          // we have nothing to modifiy    
+        if (!classnameAttributes.length) {
           return;
         }
 
-        classnameAttributes.forEach((attr) => {
-          if (t.isStringLiteral(attr.value)) {
-            // we only handle string literals for qa-css-classes
-            const classNameRegEx = /\s?qa-([-\w])*/g;
-            const node = t.jSXOpeningElement(
-              path.node.name,
-              path.node.attributes.map(currentAttr => {
-                if (attr !== currentAttr) {
-                  return currentAttr;
-                }
-                const newCssClassNameValue = attr.value.value.replace(classNameRegEx, '');
-
-                return t.jSXAttribute(
-                  t.jSXIdentifier(attr.name.name),
-                  t.stringLiteral(newCssClassNameValue)
-                );
-              }),
-              path.node.selfClosing
-            );
-            path.replaceWith(node);
-            node.hasStrippedQAClass = true;
+        classnameAttributes.forEach(attr => {
+          if (!t.isStringLiteral(attr.value)) {
+            return;
           }
+
+          const classNameRegEx = /\s?qa-([-\w])*/g;
+
+          const removeQAClassNames = currentAttr => {
+            if (attr !== currentAttr) {
+              return currentAttr;
+            }
+            const newClassNameValue = attr.value.value.replace(classNameRegEx, '').trim();
+
+            return t.jSXAttribute(
+              t.jSXIdentifier(attr.name.name),
+              t.stringLiteral(newClassNameValue)
+            );
+          };
+          
+          const attrs = path.node.attributes.map(removeQAClassNames);
+
+          const node = t.jSXOpeningElement(
+            path.node.name,
+            attrs,
+            path.node.selfClosing
+          );
+          path.replaceWith(node);
         });
       }
     },
