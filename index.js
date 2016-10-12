@@ -30,7 +30,7 @@ const RemoveQAClasses = ({ types: t }) => {
           if (attr !== currentAttr) {
             return currentAttr;
           }
-          newClassNameValue = attr.value.value.replace(classNameRegEx, 'BOB!!!').trim();
+          newClassNameValue = attr.value.value.replace(classNameRegEx, '').trim();
 
           return t.jSXAttribute(
             t.jSXIdentifier(attr.name.name),
