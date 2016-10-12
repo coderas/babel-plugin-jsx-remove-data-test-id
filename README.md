@@ -1,4 +1,4 @@
-## babel-pluginn-remove-qa-classes
+## babel-plugin-jsx-remove-qa
 
 Remove QA classes from your production builds.
 
