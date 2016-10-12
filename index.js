@@ -1,53 +1,64 @@
-export default function RemoveQAClasses({ types: t }) {
-  return {
-    visitor: {
-      JSXOpeningElement: function transform(path) {
-        if (path.node.hasStrippedQAClass) {
-          return;
-        }
-        const classNameRegEx = /\s?qa-([-\w])*/g;
+const RemoveQAClasses = ({ types: t }) => {
+  const visitor = {
+    JSXOpeningElement: (path, state) => {
+      if (path.node.hasStrippedQAClass) {
+        return;
+      }
 
-        const validClassNameAttributes = attr => {
-          const isIdent = (
-            t.isJSXIdentifier(attr.name, { name: 'className' })
+      let attributeIdentifiers = 'className';
+
+      if (state.opts && state.opts.attributes) {
+        attributeIdentifiers = [attributeIdentifiers, ...state.opts.attributes];
+      }
+
+      const classNameRegEx = /\s?qa-([-\w])*/g;
+      let newClassNameValue;
+
+      const validClassNameAttributes = attr => {
+        const isIdent = attributeIdentifiers.find(
+          attribute => {
+            return t.isJSXIdentifier(attr.name, { name: attribute });
+          }
+        );
+        return t.isJSXAttribute(attr) && isIdent;
+      };
+
+      const isStringLiteral = attr => t.isStringLiteral(attr.value);
+
+      const replaceClassNameValues = attr => {
+        const replaceQAClassName = currentAttr => {
+          if (attr !== currentAttr) {
+            return currentAttr;
+          }
+          newClassNameValue = attr.value.value.replace(classNameRegEx, 'BOB!!!').trim();
+
+          return t.jSXAttribute(
+            t.jSXIdentifier(attr.name.name),
+            t.stringLiteral(newClassNameValue)
           );
-          return t.isJSXAttribute(attr) && isIdent;
         };
 
-        const classnameAttributes = path.node.attributes.filter(validClassNameAttributes);
+        const attrs = path.node.attributes.map(replaceQAClassName);
 
-        if (!classnameAttributes.length) {
-          return;
-        }
+        const node = t.jSXOpeningElement(
+          path.node.name,
+          attrs,
+          path.node.selfClosing
+        );
+        node.hasStrippedQAClass = true;
+        path.replaceWith(node);
+      };
 
-        classnameAttributes.forEach(attr => {
-          if (!t.isStringLiteral(attr.value)) {
-            return;
-          }
-
-          const removeQAClassNames = currentAttr => {
-            if (attr !== currentAttr) {
-              return currentAttr;
-            }
-            const newClassNameValue = attr.value.value.replace(classNameRegEx, '').trim();
-
-            return t.jSXAttribute(
-              t.jSXIdentifier(attr.name.name),
-              t.stringLiteral(newClassNameValue)
-            );
-          };
-
-          const attrs = path.node.attributes.map(removeQAClassNames);
-
-          const node = t.jSXOpeningElement(
-            path.node.name,
-            attrs,
-            path.node.selfClosing
-          );
-          node.hasStrippedQAClass = true;
-          path.replaceWith(node);
-        });
-      }
-    },
+      path.node.attributes
+        .filter(validClassNameAttributes)
+        .filter(isStringLiteral)
+        .forEach(replaceClassNameValues);
+    }
   };
-}
+
+  return {
+    visitor
+  };
+};
+
+export default RemoveQAClasses;
