@@ -3,6 +3,17 @@
   "version": "0.2.3",
   "description": "babel plugin to remove-qa-classes",
   "main": "dist/index.js",
+  "keywords": [
+    "babel",
+    "plugin",
+    "tdd",
+    "tests",
+    "specs",
+    "qa",
+    "strip",
+    "className"
+  ],
+  "repository": "git://github.com/coderas/babel-plugin-jsx-remove-qa.git",
   "scripts": {
     "build": "babel -d dist index.js",
     "postinstall": "babel -d dist index.js"
