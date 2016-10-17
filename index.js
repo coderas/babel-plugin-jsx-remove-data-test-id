@@ -5,13 +5,13 @@ const RemoveQAClasses = ({ types: t }) => {
         return;
       }
 
-      let attributeIdentifiers = 'className';
+      let attributeIdentifiers = ['className'];
 
       if (state.opts && state.opts.attributes) {
         attributeIdentifiers = [attributeIdentifiers, ...state.opts.attributes];
       }
 
-      const classNameRegEx = /\s?qa-([-\w])*/g;
+      const classNameRegEx = /(^qa-([-\w])*|\sqa-([-\w])*)/g;
       let newClassNameValue;
 
       const validClassNameAttributes = attr => {
@@ -32,13 +32,21 @@ const RemoveQAClasses = ({ types: t }) => {
           }
           newClassNameValue = attr.value.value.replace(classNameRegEx, '').trim();
 
-          return t.jSXAttribute(
-            t.jSXIdentifier(attr.name.name),
-            t.stringLiteral(newClassNameValue)
-          );
+          if (newClassNameValue.length) {
+            return t.jSXAttribute(
+              t.jSXIdentifier(attr.name.name),
+              t.stringLiteral(newClassNameValue)
+            );
+          }
         };
 
-        const attrs = path.node.attributes.map(replaceQAClassName);
+        const isDefined = value => typeof value !== 'undefined';
+
+        const attrs = (
+          path.node.attributes
+            .map(replaceQAClassName)
+            .filter(isDefined)
+        );
 
         const node = t.jSXOpeningElement(
           path.node.name,
