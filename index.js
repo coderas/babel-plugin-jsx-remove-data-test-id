@@ -8,7 +8,10 @@ const RemoveQAClasses = ({ types: t }) => {
       let attributeIdentifiers = ['className'];
 
       if (state.opts && state.opts.attributes) {
-        attributeIdentifiers = [attributeIdentifiers, ...state.opts.attributes];
+        attributeIdentifiers = [
+          ...attributeIdentifiers,
+          ...state.opts.attributes
+        ];
       }
 
       const classNameRegEx = /(^qa-([-\w])*|\sqa-([-\w])*)/g;

@@ -14,6 +14,18 @@ const config = {
   ]
 };
 
+const configWithCustomAttributes = {
+  plugins: [
+    [
+      './',
+      {
+        attributes: ['cssClassName']
+      }
+    ],
+    ['transform-react-jsx', { pragma: 'j' }],
+  ]
+};
+
 const configWithoutPlugin = {
   plugins: [
     ['transform-react-jsx', { pragma: 'j' }],
@@ -51,4 +63,21 @@ describe('jsx-remove-qa-classnames', () => {
     expect(uglify(actual)).to.equal(uglify(expected));
   });
 
+  describe('custom attribute stripping', () => {
+    it('replaces attribute values that start with "qa-"', () => {
+      const code = '<p cssClassName="qa-class"></p>';
+      const expectedCode = '<p></p>';
+      const actual = transform(code, configWithCustomAttributes).code;
+      const expected = transform(expectedCode, configWithoutPlugin).code;
+      expect(uglify(actual)).to.equal(uglify(expected));
+    });
+
+    it('preserves adjacent attribute values', () => {
+      const code = '<p cssClassName="preserve-me qa-class and-me"></p>';
+      const expectedCode = '<p cssClassName="preserve-me and-me"></p>';
+      const actual = transform(code, configWithCustomAttributes).code;
+      const expected = transform(expectedCode, configWithoutPlugin).code;
+      expect(uglify(actual)).to.equal(uglify(expected));
+    });
+  });
 });
