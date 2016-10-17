@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-remove-qa",
-  "version": "0.3.0",
+  "version": "0.2.4",
   "description": "babel plugin to remove-qa-classes",
   "main": "dist/index.js",
   "keywords": [
