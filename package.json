@@ -11,7 +11,9 @@
     "specs",
     "qa",
     "strip",
-    "className"
+    "className",
+    "jsx",
+    "react"
   ],
   "repository": "git://github.com/coderas/babel-plugin-jsx-remove-qa.git",
   "scripts": {
