@@ -29,7 +29,7 @@ plugins: [
 ```
 
 ### How to use
-Add classnames to your react components
+Add `data-test-id` to your react components
 
 ```javascript
 return (
