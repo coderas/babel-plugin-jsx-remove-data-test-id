@@ -1,7 +1,7 @@
 {
-  "name": "babel-plugin-jsx-remove-qa",
-  "version": "0.3.1",
-  "description": "babel plugin to remove-qa-classes",
+  "name": "babel-plugin-jsx-remove-data-test-id",
+  "version": "1.0.0",
+  "description": "babel plugin to remove data-test-id attributes",
   "main": "dist/index.js",
   "keywords": [
     "babel",
@@ -13,9 +13,12 @@
     "strip",
     "className",
     "jsx",
-    "react"
+    "react",
+    "unit testing",
+    "e2e testing",
+    "test-id"
   ],
-  "repository": "git://github.com/coderas/babel-plugin-jsx-remove-qa.git",
+  "repository": "git://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
   "scripts": {
     "build": "babel -d dist index.js",
     "postinstall": "babel -d dist index.js",

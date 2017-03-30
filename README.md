@@ -1,32 +1,30 @@
-## babel-plugin-jsx-remove-qa
+## babel-plugin-jsx-remove-data-test-id
 
-Remove QA classes from your production builds.
+Remove `data-test-id` attributes from your production builds.
 
 ### Motivation
-It's not a good idea to hang unit tests off production CSS classes or DOM elements for a couple of reasons:
-* Finding by an ```.o-some-class``` selector couples our test to the CSS; making changes can be expensive from a maintainance point of view, whether they are coming from the CSS or the tests
+It's not usually a good idea to couple our test code with DOM element id's or CSS classnames.
+* Finding by an ```.o-some-class``` or ```#some-id``` selector couples our test to the CSS; making changes can be expensive from a maintainance point of view, whether they are coming from the CSS or the tests
 * Finding elements by DOM tag, such as ```<span />``` or ```<p>``` can be equally as difficult to maintain; these things move around so if your looking for ```.first()``` you might get a nasty surprise
 
-We wanted to decouple our tests from the production CSS, but quite liked what class selectors gave us, so we started to add ```className="qa-some-class"``` to our React components.
+We wanted to decouple our tests from these concerns, in a way that would support both unit
+level tests and end to end test. Bring in:
 
-This is good because, by convention, our UI guys never style to these classes so when we want to move stuff around - we just do it, and so do they.
+```data-test-id="some-test-id"```
 
-The problem is, left untreated, these things can makes their way into your production code. Not good.
+This package give you the ability to strip these test id's from production code.
 
 ### Install
 
 ```bash
-npm install babel-plugin-jsx-remove-qa --save-dev
+npm install babel-plugin-jsx-remove-data-test-id --save-dev
 ```
 
 Add this to you babel config plugins
 
 ```javascript
 plugins: [
-    'babel-plugin-jsx-remove-qa',
-    {
-        attributes: ['cssClassName'] // Another attribute you might want to remove
-    }
+    'babel-plugin-jsx-remove-data-test-id'
 ]
 ```
 
@@ -36,13 +34,12 @@ Add classnames to your react components
 ```javascript
 return (
     <div>
-        <p className="qa-component-text">{someText}</p>
-        <ChildComponent cssClassName="qa-child-component" {...props] />
+        <p data-test-id="component-text">{someText}</p>
     </div>
 );
 ```
 
-Make sure the plugins are part of your webpack build, and that's it. ```.qa-classes``` will be stripped.
+Make sure the plugins are part of your webpack build, and that's it. ```data-test-id```'s will be stripped.
 
 At the moment this only works on string literals, but at some point we'll be adding support for expressions too.
 
