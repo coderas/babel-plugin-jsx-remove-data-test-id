@@ -5,6 +5,8 @@ const RemoveDataTestIds = ({ types: t }) => {
         return;
       }
 
+      const attributeIdentifiers = ['data-test-id'];
+
       const validClassNameAttributes = attr => {
         const isIdent = attributeIdentifiers.find(
           attribute => {
