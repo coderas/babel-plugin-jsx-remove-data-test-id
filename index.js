@@ -6,7 +6,11 @@ const RemoveDataTestIds = ({ types: t }) => {
       }
 
       const validClassNameAttributes = attr => {
-        const isIdent = attr.name.name === 'data-test-id';
+        const isIdent = attributeIdentifiers.find(
+          attribute => {
+            return t.isJSXIdentifier(attr.name, { name: attribute });
+          }
+        );
         return t.isJSXAttribute(attr) && isIdent;
       };
 
