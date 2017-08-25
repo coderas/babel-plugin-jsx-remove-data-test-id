@@ -40,6 +40,3 @@ return (
 ```
 
 Make sure the plugins are part of your webpack build, and that's it. ```data-test-id```'s will be stripped.
-
-At the moment this only works on string literals, but at some point we'll be adding support for expressions too.
-
