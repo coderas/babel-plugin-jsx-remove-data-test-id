@@ -7,7 +7,7 @@ const RemoveDataTestIds = ({ types: t }) => {
 
       const attributeIdentifiers = ['data-test-id'];
 
-      const validClassNameAttributes = attr => {
+      const validTestIdAttributes = attr => {
         const isIdent = attributeIdentifiers.find(
           attribute => {
             return t.isJSXIdentifier(attr.name, { name: attribute });
@@ -16,7 +16,7 @@ const RemoveDataTestIds = ({ types: t }) => {
         return t.isJSXAttribute(attr) && isIdent;
       };
 
-      const isStringLiteral = attr => t.isStringLiteral(attr.value);
+      //const isStringLiteral = attr => t.isStringLiteral(attr.value);
 
       const replaceClassNameValues = attr => {
         const matchingAttrs = currentAttr => {
@@ -43,8 +43,8 @@ const RemoveDataTestIds = ({ types: t }) => {
       };
 
       path.node.attributes
-        .filter(validClassNameAttributes)
-        .filter(isStringLiteral)
+        .filter(validTestIdAttributes)
+        //.filter(isStringLiteral)
         .forEach(replaceClassNameValues);
     }
   };
