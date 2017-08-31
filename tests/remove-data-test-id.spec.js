@@ -11,12 +11,14 @@ const config = {
   plugins: [
     './',
     ['transform-react-jsx', { pragma: 'j' }],
+    ['transform-es2015-arrow-functions', {}]
   ]
 };
 
 const configWithoutPlugin = {
   plugins: [
     ['transform-react-jsx', { pragma: 'j' }],
+    ['transform-es2015-arrow-functions', {}]
   ]
 };
 
@@ -37,6 +39,22 @@ describe('jsx-remove-data-test-id', () => {
 
   it('removes data-test-id', () => {
     const code = '<p data-test-id="test-id"></p>';
+    const expectedCode = '<p></p>';
+    const actual = transform(code, config).code;
+    const expected = transform(expectedCode, configWithoutPlugin).code;
+    expect(uglify(actual)).to.equal(uglify(expected));
+  });
+
+  it('removes data-test-id funcs', () => {
+    const code = '<p data-test-id={() => {}}></p>';
+    const expectedCode = '<p></p>';
+    const actual = transform(code, config).code;
+    const expected = transform(expectedCode, configWithoutPlugin).code;
+    expect(uglify(actual)).to.equal(uglify(expected));
+  });
+
+  it('removes data-test-id bools', () => {
+    const code = '<p data-test-id={false}></p>';
     const expectedCode = '<p></p>';
     const actual = transform(code, config).code;
     const expected = transform(expectedCode, configWithoutPlugin).code;
