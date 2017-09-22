@@ -16,8 +16,6 @@ const RemoveDataTestIds = ({ types: t }) => {
         return t.isJSXAttribute(attr) && isIdent;
       };
 
-      //const isStringLiteral = attr => t.isStringLiteral(attr.value);
-
       const replaceClassNameValues = attr => {
         const matchingAttrs = currentAttr => {
           if (attr !== currentAttr) {
@@ -44,7 +42,6 @@ const RemoveDataTestIds = ({ types: t }) => {
 
       path.node.attributes
         .filter(validTestIdAttributes)
-        //.filter(isStringLiteral)
         .forEach(replaceClassNameValues);
     }
   };
