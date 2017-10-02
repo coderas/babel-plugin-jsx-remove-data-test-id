@@ -39,4 +39,4 @@ return (
 );
 ```
 
-Make sure the plugins are part of your webpack build, and that's it. ```data-test-id```'s will be stripped.
+Make sure the plugins are part of your babel config, and build away - that's it. ```data-test-id```'s will be stripped.
