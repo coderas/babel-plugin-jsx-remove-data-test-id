@@ -9,7 +9,7 @@ const uglify = code => minify(code, {
 
 const config = {
   plugins: [
-    './',
+    './lib',
     ['transform-react-jsx', { pragma: 'j' }],
     ['transform-es2015-arrow-functions', {}]
   ]
