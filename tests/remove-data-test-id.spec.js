@@ -60,4 +60,75 @@ describe('jsx-remove-data-test-id', () => {
     const expected = transform(expectedCode, configWithoutPlugin).code;
     expect(uglify(actual)).to.equal(uglify(expected));
   });
+
+  describe('with invalid options.attributes', () => {
+    it('throws error when attributes is empty string', () => {
+      const configWithErroneousAttributesOption = {
+        plugins: [
+          ['./src', {attributes: ''}],
+          ['transform-react-jsx', { pragma: 'j' }],
+          ['transform-es2015-arrow-functions', {}]
+        ]
+      };
+      const code = '<p selenium-id={false}></p>';
+      const expectedCode = '<p></p>';
+      const action = () => transform(code, configWithErroneousAttributesOption);
+      expect(action).to.throw();
+    });
+
+    it('throws error when attributes is empty array', () => {
+      const configWithErroneousAttributesOption = {
+        plugins: [
+          ['./src', {attributes: []}],
+          ['transform-react-jsx', { pragma: 'j' }],
+          ['transform-es2015-arrow-functions', {}]
+        ]
+      };
+      const code = '<p selenium-id={false}></p>';
+      const expectedCode = '<p></p>';
+      const action = () => transform(code, configWithErroneousAttributesOption);
+      expect(action).to.throw();
+    });
+  })
+
+  describe('with valid options.attributes', () => {
+    const configWithValidAttributesOption = {
+      plugins: [
+        ['./src', { attributes: [ 'selenium-id', 'useless-attr' ] }],
+        ['transform-react-jsx', { pragma: 'j' }],
+        ['transform-es2015-arrow-functions', {}]
+      ]
+    };
+
+    it('does not remove attributes that match options.attributes in part only', () => {
+      const code = '<p selenium-id-not="not-test-id" no-useless-attr="useless">hi, finally it is cake time</p>';
+      const actual = transform(code, configWithValidAttributesOption).code;
+      const expected = transform(code, configWithoutPlugin).code;
+      expect(uglify(actual)).to.equal(uglify(expected));
+    });
+
+    it('removes options.attributes', () => {
+      const code = '<p selenium-id="test-id" useless-attr="useless"></p>';
+      const expectedCode = '<p></p>';
+      const actual = transform(code, configWithValidAttributesOption).code;
+      const expected = transform(expectedCode, configWithoutPlugin).code;
+      expect(uglify(actual)).to.equal(uglify(expected));
+    });
+
+    it('removes options.attributes funcs', () => {
+      const code = '<p selenium-id={() => {}} useless-attr={() => {}}></p>';
+      const expectedCode = '<p></p>';
+      const actual = transform(code, configWithValidAttributesOption).code;
+      const expected = transform(expectedCode, configWithoutPlugin).code;
+      expect(uglify(actual)).to.equal(uglify(expected));
+    });
+
+    it('removes options.attributes bools', () => {
+      const code = '<p selenium-id={false} useless-attr={true}></p>';
+      const expectedCode = '<p></p>';
+      const actual = transform(code, configWithValidAttributesOption).code;
+      const expected = transform(expectedCode, configWithoutPlugin).code;
+      expect(uglify(actual)).to.equal(uglify(expected));
+    });
+  })
 });
