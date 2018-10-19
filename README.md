@@ -44,25 +44,28 @@ return (
 By default attributes with name ```data-test-id``` will be stripped. You can also define custom attribute names via plugin options in your babel config:
 
 ```javascript
-plugins: [
-    'babel-plugin-jsx-remove-data-test-id',
+"plugins": [
+  [
+    "babel-plugin-jsx-remove-data-test-id",
     {
-      attributes: 'selenium-id'
+      "attributes": "data-test-id"
     }
+  ]
 ]
 ```
 
 Or if you need to strip off multiple attributes, you can define an attributes array as follows:
 ```javascript
-plugins: [
-    'babel-plugin-jsx-remove-data-test-id',
+"plugins": [
+  [
+    "babel-plugin-jsx-remove-data-test-id",
     {
-      attributes: [
-        'data-test-id',
-        'selenium-id',
-        'another-attr-to-be-stripped'
+      "attributes": [
+        "data-test-id",
+        "data-selenium-id"
       ]
     }
+  ]
 ]
 ```
 
