@@ -1,5 +1,5 @@
 const getAttributeIdentifiers = options => {
-  if(!options || typeof(options.attributes) === 'undefined') return ['data-test-id'];
+  if(!options || typeof(options.attributes) === 'undefined') return ['data-test-id', 'data-testid'];
   
   if(Array.isArray(options.attributes)) {
     if(options.attributes.length === 0) {
