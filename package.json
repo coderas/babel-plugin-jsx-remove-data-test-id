@@ -21,19 +21,25 @@
   "repository": "git://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "prepublish": "babel src --out-dir lib",
-    "test": "mocha \"**/*.spec.js\" --compilers js:babel-core/register --reporter spec"
+    "prepare": "npm test && npm run build",
+    "test": "mocha \"**/*.spec.js\" --compilers js:@babel/register --reporter spec"
   },
   "author": "Rich Gorman",
   "license": "MIT",
-  "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0"
+  "peerDependencies": {
+    "@babel/core": "^7.0.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-arrow-functions": "^7.2.0",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.0.0",
+    "babel-core": "^6.26.3",
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
-    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-env": "^1.7.0",
     "chai": "^3.5.0",
     "mocha": "^3.1.2",
     "uglify-js": "^2.7.3"

@@ -1,4 +1,4 @@
 {
-    "presets": ["es2015"],
-    "plugins": ["transform-react-jsx"]
+    "presets": [["@babel/preset-env", { "targets": { "node": 6 } }]],
+    "plugins": ["@babel/plugin-transform-react-jsx"]
 }
