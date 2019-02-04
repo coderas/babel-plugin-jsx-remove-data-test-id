@@ -40,6 +40,10 @@ return (
 );
 ```
 
+### Peer dependency warnings
+
+This plugin specifies Babel 7 as its peer dependency - while it also works with Babel 6 you might want to install `@babel/core@6.0.0-bridge.1` to get rid of unmet peer dependency warnings.
+
 ### Define custom attribute name(s)
 
 By default attributes with name `data-test-id` or `data-testid` (as used in [react-testing-library](https://testing-library.com/react)) will be stripped. You can also define custom attribute names via plugin options in your babel config:
