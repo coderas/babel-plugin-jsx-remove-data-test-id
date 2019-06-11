@@ -28,6 +28,21 @@ Add this to you babel config plugins
 plugins: ["babel-plugin-jsx-remove-data-test-id"];
 ```
 
+In some configurations the above will strip out the test attribute before the tests are run, causing them to fail. If this is the case for your project, you'll need to limit the plugin to non-test environments.
+
+```javascript
+{
+  env: {
+    production: {
+      plugins: ["babel-plugin-jsx-remove-data-test-id"]
+    },
+    test: {
+      plugins: ["other-plugins"]
+    }
+  }
+}
+```
+
 ### How to use
 
 Add `data-test-id` to your react components
