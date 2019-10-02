@@ -39,14 +39,18 @@ const RemoveDataTestIds = ({ types: t }) => {
 					.node
 					.attributes
 					.map((attribute) => {
+						const {
+							value: { expression: { properties } = {} } = {}
+						} = attribute
 
-						const properties = attribute.value.expression.properties.filter(property => {
+
+						const _properties = properties.filter(property => {
 							return attributeIdentifiers.includes(property.key.value)
 						})
 						if (properties.length === 0) {
 							return {
 								...attribute,
-								properties,
+								properties: _properties,
 							}
 						}
 						return undefined
