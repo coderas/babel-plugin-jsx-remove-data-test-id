@@ -1,76 +1,71 @@
 const getAttributeIdentifiers = options => {
-  if(!options || typeof(options.attributes) === 'undefined') return ['data-test-id', 'data-testid'];
-  
-  if(Array.isArray(options.attributes)) {
-    if(options.attributes.length === 0) {
-      throw new Error('option attributes must be an array with at least one element');
-    }
-    
-    if (options.attributes.length !==  options.attributes.filter(attr => attr && typeof(attr) === 'string').length) {
-      throw new Error('all items in the option attributes must be non empty strings');
-    }
-    
-    return options.attributes;
-  }
-  
-  if(!options.attributes || typeof(options.attributes) !== 'string') {
-    throw new Error('option attributes must be a non empty string or an array with non empty strings');
-  }
-  
-  return [options.attributes];
+	if (!options || typeof (options.attributes) === "undefined") return [
+		"data-test-id",
+		"data-testid"
+	]
+
+	if (Array.isArray(options.attributes)) {
+		if (options.attributes.length === 0) {
+			throw new Error("option attributes must be an array with at least one element")
+		}
+
+		if (options.attributes.length !== options.attributes.filter(attr => attr && typeof (attr) === "string").length) {
+			throw new Error("all items in the option attributes must be non empty strings")
+		}
+
+		return options.attributes
+	}
+
+	if (!options.attributes || typeof (options.attributes) !== "string") {
+		throw new Error("option attributes must be a non empty string or an array with non empty strings")
+	}
+
+	return [ options.attributes ]
 }
 
+const isDefined = value => typeof value !== "undefined"
+
+
 const RemoveDataTestIds = ({ types: t }) => {
-  const visitor = {
-    JSXOpeningElement: (path, state) => {
-      if (path.node.hasStripped) {
-        return;
-      }
+	const visitor = {
+		JSXOpeningElement: (path, state) => {
+			if (path.node.hasStripped) {
+				return
+			}
+			const attributeIdentifiers = getAttributeIdentifiers(state.opts)
 
-      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
+			const attrs =
+				path
+					.node
+					.attributes
+					.map((attribute) => {
 
-      const validTestIdAttributes = attr => {
-        const isIdent = attributeIdentifiers.find(
-          attribute => {
-            return t.isJSXIdentifier(attr.name, { name: attribute });
-          }
-        );
-        return t.isJSXAttribute(attr) && isIdent;
-      };
+						const properties = attribute.value.expression.properties.filter(property => {
+							return attributeIdentifiers.includes(property.key.value)
+						})
+						if (properties.length === 0) {
+							return {
+								...attribute,
+								properties,
+							}
+						}
+						return undefined
+					})
+					.filter(isDefined)
 
-      const replaceClassNameValues = attr => {
-        const matchingAttrs = currentAttr => {
-          if (attr !== currentAttr) {
-            return currentAttr;
-          }
-        };
+			const node = t.jSXOpeningElement(
+				path.node.name,
+				attrs,
+				path.node.selfClosing
+			)
+			node.hasStripped = true
+			path.replaceWith(node)
+		}
+	}
 
-        const isDefined = value => typeof value !== 'undefined';
+	return {
+		visitor
+	}
+}
 
-        const attrs = (
-          path.node.attributes
-            .map(matchingAttrs)
-            .filter(isDefined)
-        );
-
-        const node = t.jSXOpeningElement(
-          path.node.name,
-          attrs,
-          path.node.selfClosing
-        );
-        node.hasStripped = true;
-        path.replaceWith(node);
-      };
-
-      path.node.attributes
-        .filter(validTestIdAttributes)
-        .forEach(replaceClassNameValues);
-    }
-  };
-
-  return {
-    visitor
-  };
-};
-
-export default RemoveDataTestIds;
+export default RemoveDataTestIds

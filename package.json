@@ -1,7 +1,7 @@
 {
-  "name": "babel-plugin-jsx-remove-data-test-id",
-  "version": "2.0.0",
-  "description": "babel plugin to remove data-test-id attributes",
+  "name": "babel-plugin-jsx-remove-data-test-id-in-objects",
+  "version": "0.0.1",
+  "description": "babel plugin to remove data-test-id attributes in objects",
   "main": "lib/index.js",
   "keywords": [
     "babel",
