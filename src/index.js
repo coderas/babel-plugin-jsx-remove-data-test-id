@@ -23,7 +23,7 @@ const getAttributeIdentifiers = options => {
 	return [ options.attributes ]
 }
 
-const isDefined = value => typeof value !== "undefined"
+const isDefined = value => Object.keys(value).length !== 0
 
 
 const RemoveDataTestIds = ({ types: t }) => {
@@ -40,20 +40,19 @@ const RemoveDataTestIds = ({ types: t }) => {
 					.attributes
 					.map((attribute) => {
 						const {
-							value: { expression: { properties } = {} } = {}
+							value: { expression: { properties = [] } = {} } = {}
 						} = attribute
-
 
 						const _properties = properties.filter(property => {
 							return attributeIdentifiers.includes(property.key.value)
 						})
-						if (properties.length === 0) {
+						if (_properties.length === 0) {
 							return {
 								...attribute,
 								properties: _properties,
 							}
 						}
-						return undefined
+						return {}
 					})
 					.filter(isDefined)
 
