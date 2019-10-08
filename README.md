@@ -65,10 +65,12 @@ By default attributes with name `data-test-id` or `data-testid` (as used in [rea
 
 ```javascript
 plugins: [
-  "babel-plugin-jsx-remove-data-test-id",
-  {
-    attributes: "selenium-id"
-  }
+  [
+    "babel-plugin-jsx-remove-data-test-id",
+    {
+      attributes: "selenium-id"
+    }
+  ]
 ];
 ```
 
@@ -76,10 +78,12 @@ Or if you need to strip off multiple attributes, you can define an attributes ar
 
 ```javascript
 plugins: [
-  "babel-plugin-jsx-remove-data-test-id",
-  {
-    attributes: ["data-test-id", "selenium-id", "another-attr-to-be-stripped"]
-  }
+  [
+    "babel-plugin-jsx-remove-data-test-id",
+    {
+      attributes: ["data-test-id", "selenium-id", "another-attr-to-be-stripped"]
+    }
+  ]
 ];
 ```
 
