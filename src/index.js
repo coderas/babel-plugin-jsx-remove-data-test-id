@@ -23,38 +23,74 @@ const getAttributeIdentifiers = options => {
 	return [ options.attributes ]
 }
 
-const isDefined = value => Object.keys(value).length !== 0
-
-
 const RemoveDataTestIds = ({ types: t }) => {
 	const visitor = {
 		JSXOpeningElement: (path, state) => {
 			if (path.node.hasStripped) {
-				return
+				return;
 			}
-			const attributeIdentifiers = getAttributeIdentifiers(state.opts)
+
+			const attributeIdentifiers = getAttributeIdentifiers(state.opts);
+
+			const validTestIdAttributes = attr => {
+				const isIdent = attributeIdentifiers.find(
+					attribute => {
+						return t.isJSXIdentifier(attr.name, { name: attribute });
+					}
+				);
+				return t.isJSXAttribute(attr) && isIdent;
+			};
+
+			const replaceClassNameValues = attr => {
+				const matchingAttrs = currentAttr => {
+					if (attr !== currentAttr) {
+						return currentAttr;
+					}
+				};
+
+				const isDefined = value => typeof value !== 'undefined';
+
+				const attrs = (
+					path.node.attributes
+						.map(matchingAttrs)
+						.filter(isDefined)
+				);
+
+				const node = t.jSXOpeningElement(
+					path.node.name,
+					attrs,
+					path.node.selfClosing
+				);
+				node.hasStripped = true;
+				path.replaceWith(node);
+			};
+
+			path.node.attributes
+				.filter(validTestIdAttributes)
+				.forEach(replaceClassNameValues);
+
+
+			const isObjectDefined = value => Object.keys(value).length !== 0
+
+			const matchAndReplaceValues = currentAttr => {
+				const {
+					value: { expression: { properties = [] } = {} } = {}
+				} = currentAttr
+
+				const filteredProperties = properties.filter(property => attributeIdentifiers.includes(property.key.value))
+				if (filteredProperties.length === 0) {
+					return {
+						...currentAttr,
+						properties: filteredProperties,
+					}
+				}
+				return {}
+			}
 
 			const attrs =
-				path
-					.node
-					.attributes
-					.map((attribute) => {
-						const {
-							value: { expression: { properties = [] } = {} } = {}
-						} = attribute
-
-						const _properties = properties.filter(property => {
-							return attributeIdentifiers.includes(property.key.value)
-						})
-						if (_properties.length === 0) {
-							return {
-								...attribute,
-								properties: _properties,
-							}
-						}
-						return {}
-					})
-					.filter(isDefined)
+				path.node.attributes
+					.map(matchAndReplaceValues)
+					.filter(isObjectDefined)//remove empty objects that resulted in removing the only key (test-id)
 
 			const node = t.jSXOpeningElement(
 				path.node.name,
