@@ -18,7 +18,7 @@ const getAttributeIdentifiers = options => {
   }
 
   return [options.attributes];
-}
+};
 
 const RemoveDataTestIds = ({ types: t }) => {
   const visitor = {
@@ -71,7 +71,7 @@ const RemoveDataTestIds = ({ types: t }) => {
       const matchAndReplaceValues = currentAttr => {
         const {
           value: { expression: { properties = [] } = {} } = {}
-        } = currentAttr
+        } = currentAttr;
 
         const filteredProperties = properties.filter(property => attributeIdentifiers.includes(property.key.value))
         if (filteredProperties.length === 0) {
@@ -86,13 +86,13 @@ const RemoveDataTestIds = ({ types: t }) => {
       const attrs =
         path.node.attributes
           .map(matchAndReplaceValues)
-          .filter(isObjectDefined)//remove empty objects that resulted in removing the only key (test-id)
+          .filter(isObjectDefined);
 
       const node = t.jSXOpeningElement(
         path.node.name,
         attrs,
         path.node.selfClosing
-      )
+      );
       node.hasStripped = true;
       path.replaceWith(node);
     }
