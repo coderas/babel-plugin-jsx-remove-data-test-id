@@ -72,8 +72,8 @@ const RemoveDataTestIds = ({ types: t }) => {
 
       const isObjectDefined = value => Object.keys(value).length !== 0;
 
-      const matchAndReplaceValues = ({ value, ...currentAttr }) => {
-        const { expression: { properties = [] } = {} } = value || {};
+      const matchAndReplaceValues = ({ value = {}, ...currentAttr }) => {
+        const { expression: { properties = [] } = {} } = value;
 
         const filteredProperties = properties.filter(property =>
           attributeIdentifiers.includes(property.key.value)
@@ -81,6 +81,7 @@ const RemoveDataTestIds = ({ types: t }) => {
         if (filteredProperties.length === 0) {
           return {
             ...currentAttr,
+            value,
             properties: filteredProperties
           };
         }
