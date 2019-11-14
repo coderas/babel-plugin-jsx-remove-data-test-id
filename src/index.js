@@ -1,20 +1,30 @@
 const getAttributeIdentifiers = options => {
-  if(!options || typeof(options.attributes) === 'undefined') return ['data-test-id', 'data-testid'];
+  if (!options || typeof options.attributes === "undefined")
+    return ["data-test-id", "data-testid"];
 
-  if(Array.isArray(options.attributes)) {
-    if(options.attributes.length === 0) {
-      throw new Error('option attributes must be an array with at least one element');
+  if (Array.isArray(options.attributes)) {
+    if (options.attributes.length === 0) {
+      throw new Error(
+        "option attributes must be an array with at least one element"
+      );
     }
 
-    if (options.attributes.length !==  options.attributes.filter(attr => attr && typeof(attr) === 'string').length) {
-      throw new Error('all items in the option attributes must be non empty strings');
+    if (
+      options.attributes.length !==
+      options.attributes.filter(attr => attr && typeof attr === "string").length
+    ) {
+      throw new Error(
+        "all items in the option attributes must be non empty strings"
+      );
     }
 
     return options.attributes;
   }
 
-  if(!options.attributes || typeof(options.attributes) !== 'string') {
-    throw new Error('option attributes must be a non empty string or an array with non empty strings');
+  if (!options.attributes || typeof options.attributes !== "string") {
+    throw new Error(
+      "option attributes must be a non empty string or an array with non empty strings"
+    );
   }
 
   return [options.attributes];
@@ -30,11 +40,9 @@ const RemoveDataTestIds = ({ types: t }) => {
       const attributeIdentifiers = getAttributeIdentifiers(state.opts);
 
       const validTestIdAttributes = attr => {
-        const isIdent = attributeIdentifiers.find(
-          attribute => {
-            return t.isJSXIdentifier(attr.name, { name: attribute });
-          }
-        );
+        const isIdent = attributeIdentifiers.find(attribute => {
+          return t.isJSXIdentifier(attr.name, { name: attribute });
+        });
         return t.isJSXAttribute(attr) && isIdent;
       };
 
@@ -45,13 +53,9 @@ const RemoveDataTestIds = ({ types: t }) => {
           }
         };
 
-        const isDefined = value => typeof value !== 'undefined';
+        const isDefined = value => typeof value !== "undefined";
 
-        const attrs = (
-          path.node.attributes
-            .map(matchingAttrs)
-            .filter(isDefined)
-        );
+        const attrs = path.node.attributes.map(matchingAttrs).filter(isDefined);
 
         const node = t.jSXOpeningElement(
           path.node.name,
@@ -68,25 +72,24 @@ const RemoveDataTestIds = ({ types: t }) => {
 
       const isObjectDefined = value => Object.keys(value).length !== 0;
 
-      const matchAndReplaceValues = currentAttr => {
-        const {
-          value: { expression: { properties = [] } = {} } = {}
-        } = currentAttr;
+      const matchAndReplaceValues = ({ value, ...currentAttr }) => {
+        const { expression: { properties = [] } = {} } = value || {};
 
-        const filteredProperties = properties.filter(property => attributeIdentifiers.includes(property.key.value))
+        const filteredProperties = properties.filter(property =>
+          attributeIdentifiers.includes(property.key.value)
+        );
         if (filteredProperties.length === 0) {
           return {
             ...currentAttr,
-            properties: filteredProperties,
-          }
+            properties: filteredProperties
+          };
         }
-        return {}
+        return {};
       };
 
-      const attrs =
-        path.node.attributes
-          .map(matchAndReplaceValues)
-          .filter(isObjectDefined);
+      const attrs = path.node.attributes
+        .map(matchAndReplaceValues)
+        .filter(isObjectDefined);
 
       const node = t.jSXOpeningElement(
         path.node.name,
