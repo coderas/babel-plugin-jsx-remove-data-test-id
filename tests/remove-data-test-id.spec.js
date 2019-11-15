@@ -109,6 +109,13 @@ const runTests = (label, transform) => {
           expect(uglify(actual)).to.equal(uglify(expected));
         });
 
+        it('removes options.attributes bools', () => {
+          const code = '<p selenium-id={false} useless-attr={true}></p>';
+          const expectedCode = '<p></p>';
+          const actual = transform(code, { useValidAttributes: true });
+          const expected = transform(expectedCode);
+          expect(uglify(actual)).to.equal(uglify(expected));
+        });
       })
     });
   })
