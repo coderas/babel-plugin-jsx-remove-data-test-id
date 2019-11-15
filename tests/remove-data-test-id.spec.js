@@ -110,6 +110,14 @@ const runTests = (label, transform) => {
           const expected = transform(expectedCode);
           expect(uglify(actual)).to.equal(uglify(expected));
         });
+
+        it('removes options.attributes null', () => {
+          const code = '<p selenium-id={null}></p>';
+          const expectedCode = '<p></p>';
+          const actual = transform(code, { useValidAttributes: true });
+          const expected = transform(expectedCode);
+          expect(uglify(actual)).to.equal(uglify(expected));
+        });
       })
     });
   })
