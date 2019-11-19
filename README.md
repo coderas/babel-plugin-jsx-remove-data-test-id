@@ -55,27 +55,6 @@ return (
 );
 ```
 
-
-Add `data-test-id` as props to react components 
-
-```javascript
-return (
-  <div>
-    <SomeComponent sectionProps={{ "data-test-id"="component-text" }}>{someText}</p>
-  </div>
-);
-
-const SomeComponent = ({children, sectionProps}) => {
-  return (
-    <main>
-      <section {...sectionProps}>
-        {children}
-      </section>
-    <main>
-  );
-};
-```
-
 ### Peer dependency warnings
 
 This plugin specifies Babel 7 as its peer dependency - while it also works with Babel 6 you might want to install `@babel/core@6.0.0-bridge.1` to get rid of unmet peer dependency warnings.
