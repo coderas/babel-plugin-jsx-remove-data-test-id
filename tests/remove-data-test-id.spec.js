@@ -33,14 +33,6 @@ const runTests = (label, transform) => {
         expect(uglify(actual)).to.equal(uglify(expected));
       });
 
-      it('removes data-test-id inside of other attributes that are passed in as objects', () => {
-        const code = '<p someOtherAttribute={{ "data-test-id": "should-be-removed" }} someOtherAttributeKeep={{ className: "should-keep" }}></p>';
-        const expectedCode = '<p someOtherAttributeKeep={{ className: "should-keep" }}></p>';
-        const actual = transform(code, { usePlugin: true });
-        const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
-      });
-
       it('removes data-test-id funcs', () => {
         const code = '<p data-test-id={() => {}}></p>';
         const expectedCode = '<p></p>';
