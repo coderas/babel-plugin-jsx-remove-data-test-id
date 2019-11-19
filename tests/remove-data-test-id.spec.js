@@ -41,14 +41,6 @@ const runTests = (label, transform) => {
         expect(uglify(actual)).to.equal(uglify(expected));
       });
 
-      it('passes with boolean attributes with null value', () => {
-        const code = '<p someOtherAttribute></p>';
-        const expectedCode = '<p someOtherAttribute></p>';
-        const actual = transform(code, { usePlugin: true });
-        const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
-      });
-
       it('removes data-test-id funcs', () => {
         const code = '<p data-test-id={() => {}}></p>';
         const expectedCode = '<p></p>';
@@ -68,6 +60,7 @@ const runTests = (label, transform) => {
       describe('with invalid options.attributes', () => {
         it('throws error when attributes is empty string', () => {
           const code = '<p selenium-id={false}></p>';
+          const expectedCode = '<p></p>';
           const action = () => transform(code, {
             useErroneousAttributes: true,
             attributes: ''
@@ -77,6 +70,7 @@ const runTests = (label, transform) => {
 
         it('throws error when attributes is empty array', () => {
           const code = '<p selenium-id={false}></p>';
+          const expectedCode = '<p></p>';
           const action = () => transform(code, {
             useErroneousAttributes: true,
             attributes: []
