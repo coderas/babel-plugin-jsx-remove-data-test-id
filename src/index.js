@@ -1,24 +1,24 @@
 const getAttributeIdentifiers = options => {
   if(!options || typeof(options.attributes) === 'undefined') return ['data-test-id', 'data-testid'];
-  
+
   if(Array.isArray(options.attributes)) {
     if(options.attributes.length === 0) {
       throw new Error('option attributes must be an array with at least one element');
     }
-    
+
     if (options.attributes.length !==  options.attributes.filter(attr => attr && typeof(attr) === 'string').length) {
       throw new Error('all items in the option attributes must be non empty strings');
     }
-    
+
     return options.attributes;
   }
-  
+
   if(!options.attributes || typeof(options.attributes) !== 'string') {
     throw new Error('option attributes must be a non empty string or an array with non empty strings');
   }
-  
+
   return [options.attributes];
-}
+};
 
 const RemoveDataTestIds = ({ types: t }) => {
   const visitor = {
@@ -65,6 +65,36 @@ const RemoveDataTestIds = ({ types: t }) => {
       path.node.attributes
         .filter(validTestIdAttributes)
         .forEach(replaceClassNameValues);
+
+      const isObjectDefined = value => Object.keys(value).length !== 0;
+
+      const matchAndReplaceValues = currentAttr => {
+        const {
+          value: { expression: { properties = [] } = {} } = {}
+        } = currentAttr;
+
+        const filteredProperties = properties.filter(property => attributeIdentifiers.includes(property.key.value))
+        if (filteredProperties.length === 0) {
+          return {
+            ...currentAttr,
+            properties: filteredProperties,
+          }
+        }
+        return {}
+      };
+
+      const attrs =
+        path.node.attributes
+          .map(matchAndReplaceValues)
+          .filter(isObjectDefined);
+
+      const node = t.jSXOpeningElement(
+        path.node.name,
+        attrs,
+        path.node.selfClosing
+      );
+      node.hasStripped = true;
+      path.replaceWith(node);
     }
   };
 
