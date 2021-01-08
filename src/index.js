@@ -22,6 +22,18 @@ const getAttributeIdentifiers = options => {
 
 const RemoveDataTestIds = ({ types: t }) => {
   const visitor = {
+    ObjectProperty: (path, state) => {
+      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
+  
+      const isTestIdProperty = (key) => {
+        return attributeIdentifiers.find((attribute) => {
+          return t.isStringLiteral(key, { value: attribute })
+        });
+      };
+  
+      if (isTestIdProperty(path.node.key))
+        path.remove();
+    },
     JSXOpeningElement: (path, state) => {
       if (path.node.hasStripped) {
         return;
