@@ -49,6 +49,38 @@ const runTests = (label, transform) => {
         expect(uglify(actual)).to.equal(uglify(expected));
       });
 
+      it('removes data-test-id properties from objects and their nested objects', () => {
+        const code = '<p object={{"data-test-id": "test-id", something: "else"}}></p>';
+        const expectedCode = '<p object={{something: "else"}}></p>';
+        const actual = transform(code, { usePlugin: true });
+        const expected = transform(expectedCode);
+        expect(uglify(actual)).to.equal(uglify(expected));
+      })
+      
+      it('removes data-test-id properties from nested objects', () => {
+        const code = '<p object={{nested: {"data-test-id": "test-id"}}}></p>';
+        const expectedCode = '<p object={{nested:{}}}></p>';
+        const actual = transform(code, { usePlugin: true });
+        const expected = transform(expectedCode);
+        expect(uglify(actual)).to.equal(uglify(expected));
+      })
+
+      it('does not remove empty object expressions and their relative JSX attributes', () => {
+        const code = '<p object={{"data-test-id": "test-id"}}></p>';
+        const expectedCode = '<p object={{}}></p>';
+        const actual = transform(code, { usePlugin: true });
+        const expected = transform(expectedCode);
+        expect(uglify(actual)).to.equal(uglify(expected));
+      })
+      
+      it('does not remove properties that contain "data-test-id" in part only', () => {
+        const code = '<p object={{"data-test-id-not": "test-id", nestedObj: {"data-test-id-not": "test-id"}}}></p>';
+        const expectedCode = '<p object={{"data-test-id-not": "test-id", nestedObj:{"data-test-id-not": "test-id"}}}></p>';
+        const actual = transform(code, { usePlugin: true });
+        const expected = transform(expectedCode);
+        expect(uglify(actual)).to.equal(uglify(expected));
+      })
+      
       describe('with invalid options.attributes', () => {
         it('throws error when attributes is empty string', () => {
           const code = '<p selenium-id={false}></p>';
