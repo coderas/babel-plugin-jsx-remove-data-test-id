@@ -18,7 +18,7 @@
     "e2e testing",
     "test-id"
   ],
-  "repository": "git://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
+  "repository": "git+https://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
   "scripts": {
     "build": "babel src --out-dir lib",
     "prepare": "npm test && npm run build",
