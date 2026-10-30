@@ -1,4 +1,3 @@
-import * as babel6 from 'babel-core';
 import * as babel7 from '@babel/core';
 import { expect } from 'chai';
 import { minify } from 'uglify-js';
@@ -139,40 +138,6 @@ const runTests = (label, transform) => {
   })
 }
 
-runTests(
-  "babel6",
-  (
-    code,
-    {
-      useErroneousAttributes = false,
-      useValidAttributes = false,
-      usePlugin = false,
-      attributes
-    } = {}
-  ) => {
-    let plugins;
-    if (useErroneousAttributes) {
-      plugins = [
-        ["./src", { attributes }],
-        ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
-      ];
-    } else if (useValidAttributes) {
-      plugins = [
-        ["./src", { attributes: ["selenium-id", "useless-attr"] }],
-        ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
-      ];
-    } else {
-      plugins = [
-        usePlugin && "./src",
-        ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
-      ].filter(Boolean);
-    }
-    return babel6.transform(code, { plugins }).code;
-  }
-);
 runTests(
   "babel7",
   (

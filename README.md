@@ -57,7 +57,7 @@ return (
 
 ### Peer dependency warnings
 
-This plugin specifies Babel 7 as its peer dependency - while it also works with Babel 6 you might want to install `@babel/core@6.0.0-bridge.1` to get rid of unmet peer dependency warnings.
+This plugin specifies Babel 7 as its peer dependency. Version 3.0.0 ends Babel 6 support. If you use Babel 6, use version 2.x.
 
 ### Define custom attribute name(s)
 
