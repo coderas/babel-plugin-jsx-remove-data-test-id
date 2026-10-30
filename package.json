@@ -22,7 +22,7 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "prepare": "npm test && npm run build",
-    "test": "mocha \"**/*.spec.js\" --compilers js:@babel/register --reporter spec"
+    "test": "mocha \"tests/**/*.spec.js\" --require @babel/register --reporter spec"
   },
   "author": "Rich Gorman",
   "license": "MIT",
@@ -41,7 +41,7 @@
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^3.5.0",
-    "mocha": "^3.1.2",
+    "mocha": "^12.0.3",
     "uglify-js": "^2.7.3"
   }
 }
