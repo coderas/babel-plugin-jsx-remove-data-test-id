@@ -163,7 +163,7 @@ npm test
 
 The tests use the Node.js test runner (`node:test`). The plugin has no build step: the package ships `src/index.js`.
 
-CI runs the tests with Babel 7 and Babel 8, and the examples, on Node.js 22, 24 and 26.
+The tests run every case on Babel 7 and Babel 8. CI runs the tests and the examples on Node.js 22, 24 and 26.
 
 ## License
 
