@@ -4,3 +4,5 @@ src
 node_modules
 .idea
 .babelrc
+examples
+.github

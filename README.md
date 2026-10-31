@@ -1,90 +1,149 @@
-## babel-plugin-jsx-remove-data-test-id
+# babel-plugin-jsx-remove-data-test-id
 
-Remove `data-test-id` attributes from your production builds.
+[![CI](https://github.com/coderas/babel-plugin-jsx-remove-data-test-id/actions/workflows/ci.yml/badge.svg)](https://github.com/coderas/babel-plugin-jsx-remove-data-test-id/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/babel-plugin-jsx-remove-data-test-id.svg)](https://www.npmjs.com/package/babel-plugin-jsx-remove-data-test-id)
 
-### Motivation
+A Babel plugin that removes test attributes such as `data-test-id` and `data-testid` from JSX, so they do not ship in your production builds.
 
-It's not usually a good idea to couple our test code with DOM element id's or CSS classnames.
+**In:**
 
-- Finding by an `.o-some-class` or `#some-id` selector couples our test to the CSS; making changes can be expensive from a maintainance point of view, whether they are coming from the CSS or the tests
-- Finding elements by DOM tag, such as `<span />` or `<p>` can be equally as difficult to maintain; these things move around so if your looking for `.first()` you might get a nasty surprise
+```jsx
+<button data-test-id="submit-button" className="button">
+  Save
+</button>
+```
 
-We wanted to decouple our tests from these concerns, in a way that would support both unit
-level tests and end to end test. Bring in:
+**Out:**
 
-`data-test-id="some-test-id"`
+```jsx
+<button className="button">Save</button>
+```
 
-This package give you the ability to strip these test id's from production code.
+## Contents
 
-### Install
+- [Why](#why)
+- [Install](#install)
+- [Usage](#usage)
+- [Keep test ids in your tests](#keep-test-ids-in-your-tests)
+- [Options](#options)
+- [What is removed](#what-is-removed)
+- [Examples](#examples)
+- [Compatibility](#compatibility)
+- [Development](#development)
+- [License](#license)
+
+## Why
+
+Tests that find elements by CSS class, id or tag break when the markup or the styles change. A dedicated test attribute decouples your unit and end-to-end tests from those concerns:
+
+```jsx
+<p data-test-id="component-text">{someText}</p>
+```
+
+These attributes have no use in production. This plugin removes them at build time.
+
+## Install
 
 ```bash
-npm install babel-plugin-jsx-remove-data-test-id --save-dev
+npm install --save-dev babel-plugin-jsx-remove-data-test-id
 ```
 
-Add this to you babel config plugins
+## Usage
 
-```javascript
-plugins: ["babel-plugin-jsx-remove-data-test-id"];
-```
+Add the plugin to your Babel config, for example `babel.config.json`:
 
-In some configurations the above will strip out the test attribute before the tests are run, causing them to fail. If this is the case for your project, you'll need to limit the plugin to non-test environments.
-
-```javascript
+```json
 {
-  env: {
-    production: {
-      plugins: ["babel-plugin-jsx-remove-data-test-id"]
-    },
-    test: {
-      plugins: ["other-plugins"]
+  "plugins": ["babel-plugin-jsx-remove-data-test-id"]
+}
+```
+
+By default, the plugin removes `data-test-id` and `data-testid` (the attribute that [React Testing Library](https://testing-library.com/docs/queries/bytestid) uses).
+
+## Keep test ids in your tests
+
+If your tests use the same Babel config, the plugin also removes the attributes before your tests run, and the tests fail. Enable the plugin for production builds only:
+
+```json
+{
+  "env": {
+    "production": {
+      "plugins": ["babel-plugin-jsx-remove-data-test-id"]
     }
   }
 }
 ```
 
-### How to use
+Babel selects the `env` block from `BABEL_ENV`, or from `NODE_ENV` when `BABEL_ENV` is not set. Jest sets `NODE_ENV=test`, so the plugin does not run in your tests. See [examples/keep-in-tests](examples/keep-in-tests).
 
-Add `data-test-id` to your react components
+## Options
 
-```javascript
-return (
-  <div>
-    <p data-test-id="component-text">{someText}</p>
-  </div>
-);
-```
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `attributes` | `string` or `string[]` | `["data-test-id", "data-testid"]` | The attribute names to remove. |
 
-### Peer dependency warnings
-
-This plugin specifies Babel 7 as its peer dependency. Version 3.0.0 ends Babel 6 support. If you use Babel 6, use version 2.x.
-
-### Define custom attribute name(s)
-
-By default attributes with name `data-test-id` or `data-testid` (as used in [react-testing-library](https://testing-library.com/react)) will be stripped. You can also define custom attribute names via plugin options in your babel config:
-
-```javascript
-plugins: [
-  [
-    "babel-plugin-jsx-remove-data-test-id",
-    {
-      attributes: "selenium-id"
-    }
+```json
+{
+  "plugins": [
+    ["babel-plugin-jsx-remove-data-test-id", { "attributes": ["data-cy", "data-qa"] }]
   ]
-];
+}
 ```
 
-Or if you need to strip off multiple attributes, you can define an attributes array as follows:
+`attributes` replaces the defaults. To remove `data-test-id` as well as your own names, include it in the list.
 
-```javascript
-plugins: [
-  [
-    "babel-plugin-jsx-remove-data-test-id",
-    {
-      attributes: ["data-test-id", "selenium-id", "another-attr-to-be-stripped"]
-    }
-  ]
-];
+The plugin throws an error when `attributes` is not a non-empty string or a non-empty array of non-empty strings.
+
+## What is removed
+
+- **JSX attributes** whose name matches exactly: `<p data-test-id="x" />`. `data-test-id-extra` is not removed.
+- **Object properties** whose key is a matching string literal: `{ 'data-test-id': 'x' }`. This covers props that you spread into JSX, and JSX that an earlier step has already compiled to `React.createElement` or `jsx()` calls.
+
+Object properties are removed from every object in the files that Babel transforms, not only from JSX props.
+
+The plugin does not change values at runtime. For example, it cannot remove an attribute that is added from a computed key such as `{ [name]: 'x' }`.
+
+## Examples
+
+The [examples](examples) folder has small projects that you can run:
+
+| Example | Shows |
+|---|---|
+| [basic](examples/basic) | The default attributes, in JSX and in spread props |
+| [custom-attributes](examples/custom-attributes) | The `attributes` option |
+| [keep-in-tests](examples/keep-in-tests) | Production-only removal with Babel `env` |
+
+To run an example, build the plugin first:
+
+```bash
+npm install
+npm run build
+cd examples/basic
+npm install
+npm test
 ```
 
-Make sure the plugins are part of your babel config, and build away - that's it. `data-test-id`'s (respectively your custom named attributes) will be stripped.
+`npm test` in each example compiles `src/` to `dist/` and checks the output.
+
+## Compatibility
+
+| Plugin version | Babel |
+|---|---|
+| 3.x | 7 |
+| 2.x | 6 and 7 |
+
+Version 3.0.0 ends Babel 6 support. If you use Babel 6, use version 2.x.
+
+## Development
+
+```bash
+npm install
+npm test
+npm run build
+```
+
+CI runs the tests, the build and the examples on Node 20, 22 and 24.
+
+## License
+
+[MIT](LICENSE)

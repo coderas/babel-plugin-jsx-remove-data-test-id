@@ -1,0 +1,15 @@
+{
+  "name": "example-custom-attributes",
+  "private": true,
+  "description": "Remove your own attribute names instead of the defaults",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "npm run build && node check.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "babel-plugin-jsx-remove-data-test-id": "file:../.."
+  }
+}

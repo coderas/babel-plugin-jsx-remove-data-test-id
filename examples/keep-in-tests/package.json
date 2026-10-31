@@ -1,0 +1,15 @@
+{
+  "name": "example-keep-in-tests",
+  "private": true,
+  "description": "Remove test ids from production builds only",
+  "scripts": {
+    "build": "babel src --out-dir dist --env-name production",
+    "test": "npm run build && babel src --out-dir dist-test --env-name test && node check.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "babel-plugin-jsx-remove-data-test-id": "file:../.."
+  }
+}

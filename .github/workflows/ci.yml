@@ -31,6 +31,11 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run build
+      - name: examples
+        run: |
+          for dir in examples/*/; do
+            (cd "$dir" && npm install --ignore-scripts --no-audit --no-fund && npm test)
+          done
 
   ci:
     if: always()
