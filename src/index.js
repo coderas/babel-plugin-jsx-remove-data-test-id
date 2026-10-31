@@ -20,11 +20,11 @@ const getAttributeIdentifiers = options => {
   return [options.attributes];
 }
 
-const RemoveDataTestIds = ({ types: t }) => {
+const RemoveDataTestIds = ({ types: t }, options) => {
+  const attributeIdentifiers = getAttributeIdentifiers(options);
+
   const visitor = {
-    ObjectProperty: (path, state) => {
-      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
-  
+    ObjectProperty: path => {
       const isTestIdProperty = (key) => {
         return attributeIdentifiers.find((attribute) => {
           return t.isStringLiteral(key, { value: attribute })
@@ -34,12 +34,10 @@ const RemoveDataTestIds = ({ types: t }) => {
       if (isTestIdProperty(path.node.key))
         path.remove();
     },
-    JSXOpeningElement: (path, state) => {
+    JSXOpeningElement: path => {
       if (path.node.hasStripped) {
         return;
       }
-
-      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
 
       const validTestIdAttributes = attr => {
         const isIdent = attributeIdentifiers.find(
