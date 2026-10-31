@@ -7,9 +7,9 @@
     "test": "npm run build && node check.js"
   },
   "devDependencies": {
-    "@babel/cli": "^7.29.7",
-    "@babel/core": "^7.29.7",
-    "@babel/preset-react": "^7.29.7",
+    "@babel/cli": "^8.0.6",
+    "@babel/core": "^8.0.10",
+    "@babel/preset-react": "^8.0.1",
     "babel-plugin-jsx-remove-data-test-id": "file:../.."
   }
 }

@@ -1,4 +1,4 @@
 {
-  "presets": [["@babel/preset-react", { "runtime": "automatic" }]],
+  "presets": ["@babel/preset-react"],
   "plugins": ["babel-plugin-jsx-remove-data-test-id"]
 }
