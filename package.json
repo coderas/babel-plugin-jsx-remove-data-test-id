@@ -1,8 +1,8 @@
 {
   "name": "babel-plugin-jsx-remove-data-test-id",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "description": "babel plugin to remove data-test-id attributes",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "keywords": [
     "babel",
     "plugin",
@@ -18,30 +18,31 @@
     "e2e testing",
     "test-id"
   ],
-  "repository": "git://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "prepare": "npm test && npm run build",
-    "test": "mocha \"tests/**/*.spec.js\" --require @babel/register --reporter spec"
+    "test": "node --test \"tests/**/*.spec.js\""
   },
   "author": "Rich Gorman",
   "license": "MIT",
   "peerDependencies": {
-    "@babel/core": "^7.0.0"
+    "@babel/core": "^7.0.0 || ^8.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.29.7",
-    "@babel/plugin-transform-arrow-functions": "^7.2.0",
-    "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/preset-env": "^7.29.7",
-    "@babel/register": "^7.0.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
-    "babel-plugin-transform-react-jsx": "^6.8.0",
-    "babel-preset-env": "^1.7.0",
-    "chai": "^3.5.0",
-    "mocha": "^12.0.3",
-    "uglify-js": "^2.7.3"
-  }
+    "babel-8-core": "npm:@babel/core@^8.0.10"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coderas/babel-plugin-jsx-remove-data-test-id/issues"
+  },
+  "homepage": "https://github.com/coderas/babel-plugin-jsx-remove-data-test-id#readme",
+  "type": "module"
 }

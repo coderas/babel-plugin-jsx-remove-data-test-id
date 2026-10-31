@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [20, 22, 24]
+        node: [22, 24, 26]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -30,7 +30,11 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm test
-      - run: npm run build
+      - name: examples
+        run: |
+          for dir in examples/*/; do
+            (cd "$dir" && npm install --ignore-scripts --no-audit --no-fund && npm test)
+          done
 
   ci:
     if: always()

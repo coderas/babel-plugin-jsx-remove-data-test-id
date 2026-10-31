@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/preset-react"],
+  "plugins": [["babel-plugin-jsx-remove-data-test-id", { "attributes": ["data-cy", "data-qa"] }]]
+}

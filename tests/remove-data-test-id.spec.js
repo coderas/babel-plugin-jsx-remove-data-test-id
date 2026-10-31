@@ -1,12 +1,7 @@
-import * as babel6 from 'babel-core';
-import * as babel7 from '@babel/core';
-import { expect } from 'chai';
-import { minify } from 'uglify-js';
-
-const uglify = code => minify(code, {
-  fromString: true,
-  mangle: false
-}).code;
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import babel7 from '@babel/core';
+import * as babel8 from 'babel-8-core';
 
 const runTests = (label, transform) => {
   describe(label, () => {
@@ -15,14 +10,14 @@ const runTests = (label, transform) => {
         const code = '<p data-something-else="cake-day">hi, finally it is cake time</p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(code);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('does not remove attributes that contain "data-test-id" in part only', () => {
         const code = '<p data-test-id-not="not-test-id">hi, finally it is cake time</p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(code);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id', () => {
@@ -30,7 +25,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id funcs', () => {
@@ -38,7 +33,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id bools', () => {
@@ -46,7 +41,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id properties from objects and their nested objects', () => {
@@ -54,7 +49,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{something: "else"}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
       
       it('removes data-test-id properties from nested objects', () => {
@@ -62,7 +57,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{nested:{}}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
 
       it('does not remove empty object expressions and their relative JSX attributes', () => {
@@ -70,7 +65,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
       
       it('does not remove properties that contain "data-test-id" in part only', () => {
@@ -78,7 +73,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{"data-test-id-not": "test-id", nestedObj:{"data-test-id-not": "test-id"}}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
       
       describe('with invalid options.attributes', () => {
@@ -89,7 +84,7 @@ const runTests = (label, transform) => {
             useErroneousAttributes: true,
             attributes: ''
           });
-          expect(action).to.throw();
+          assert.throws(action);
         });
 
         it('throws error when attributes is empty array', () => {
@@ -99,7 +94,7 @@ const runTests = (label, transform) => {
             useErroneousAttributes: true,
             attributes: []
           });
-          expect(action).to.throw();
+          assert.throws(action);
         });
       })
 
@@ -108,7 +103,7 @@ const runTests = (label, transform) => {
           const code = '<p selenium-id-not="not-test-id" no-useless-attr="useless">hi, finally it is cake time</p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(code);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
 
         it('removes options.attributes', () => {
@@ -116,7 +111,7 @@ const runTests = (label, transform) => {
           const expectedCode = '<p></p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
 
         it('removes options.attributes funcs', () => {
@@ -124,7 +119,7 @@ const runTests = (label, transform) => {
           const expectedCode = '<p></p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
 
         it('removes options.attributes bools', () => {
@@ -132,78 +127,52 @@ const runTests = (label, transform) => {
           const expectedCode = '<p></p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
       })
     });
   })
 }
 
-runTests(
-  "babel6",
-  (
-    code,
-    {
-      useErroneousAttributes = false,
-      useValidAttributes = false,
-      usePlugin = false,
-      attributes
-    } = {}
-  ) => {
-    let plugins;
-    if (useErroneousAttributes) {
-      plugins = [
-        ["./src", { attributes }],
-        ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
-      ];
-    } else if (useValidAttributes) {
-      plugins = [
-        ["./src", { attributes: ["selenium-id", "useless-attr"] }],
-        ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
-      ];
-    } else {
-      plugins = [
-        usePlugin && "./src",
-        ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
-      ].filter(Boolean);
+const babels = [
+  ['babel 7', babel7],
+  ['babel 8', babel8]
+];
+
+babels.forEach(([label, babel]) => {
+  runTests(
+    label,
+    (
+      code,
+      {
+        useErroneousAttributes = false,
+        useValidAttributes = false,
+        usePlugin = false,
+        attributes
+      } = {}
+    ) => {
+      let plugins = [];
+      if (useErroneousAttributes) {
+        plugins = [['./src', { attributes }]];
+      } else if (useValidAttributes) {
+        plugins = [['./src', { attributes: ['selenium-id', 'useless-attr'] }]];
+      } else if (usePlugin) {
+        plugins = ['./src'];
+      }
+      return babel.transformSync(code, { plugins, parserOpts: { plugins: ['jsx'] } }).code;
     }
-    return babel6.transform(code, { plugins }).code;
-  }
-);
-runTests(
-  "babel7",
-  (
-    code,
-    {
-      useErroneousAttributes = false,
-      useValidAttributes = false,
-      usePlugin = false,
-      attributes
-    } = {}
-  ) => {
-    let plugins
-    if (useErroneousAttributes) {
-      plugins = [
-        ['./src', { attributes }],
-        ["@babel/transform-react-jsx", { pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
-      ]
-    } else if (useValidAttributes) {
-      plugins = [
-        ['./src', { attributes: ['selenium-id', 'useless-attr'] }],
-        ["@babel/transform-react-jsx", { pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
-      ]
-    } else {
-      plugins = [
-        usePlugin && "./src",
-        ["@babel/transform-react-jsx", { pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
-      ].filter(Boolean)
-    }
-    return babel7.transformSync(code, { plugins }).code;
-  }
-);
+  );
+
+  describe(`${label} typescript`, () => {
+    const transformTsx = (code, plugins) => babel.transformSync(code, {
+      plugins,
+      parserOpts: { plugins: ['jsx', 'typescript'] }
+    }).code;
+
+    it('keeps type arguments on elements that lose a data-test-id', () => {
+      const actual = transformTsx('<Select<Option> data-test-id="select" value={value} />', ['./src']);
+      const expected = transformTsx('<Select<Option> value={value} />', []);
+      assert.equal(actual, expected);
+    });
+  });
+});

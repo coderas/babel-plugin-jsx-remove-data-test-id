@@ -20,11 +20,13 @@ const getAttributeIdentifiers = options => {
   return [options.attributes];
 }
 
-const RemoveDataTestIds = ({ types: t }) => {
+const RemoveDataTestIds = (api, options) => {
+  api.assertVersion('^7.0.0 || ^8.0.0');
+  const t = api.types;
+  const attributeIdentifiers = getAttributeIdentifiers(options);
+
   const visitor = {
-    ObjectProperty: (path, state) => {
-      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
-  
+    ObjectProperty: path => {
       const isTestIdProperty = (key) => {
         return attributeIdentifiers.find((attribute) => {
           return t.isStringLiteral(key, { value: attribute })
@@ -34,49 +36,14 @@ const RemoveDataTestIds = ({ types: t }) => {
       if (isTestIdProperty(path.node.key))
         path.remove();
     },
-    JSXOpeningElement: (path, state) => {
-      if (path.node.hasStripped) {
-        return;
+    JSXAttribute: path => {
+      const isTestIdAttribute = attributeIdentifiers.some(attribute =>
+        t.isJSXIdentifier(path.node.name, { name: attribute })
+      );
+
+      if (isTestIdAttribute) {
+        path.remove();
       }
-
-      const attributeIdentifiers = getAttributeIdentifiers(state.opts);
-
-      const validTestIdAttributes = attr => {
-        const isIdent = attributeIdentifiers.find(
-          attribute => {
-            return t.isJSXIdentifier(attr.name, { name: attribute });
-          }
-        );
-        return t.isJSXAttribute(attr) && isIdent;
-      };
-
-      const replaceClassNameValues = attr => {
-        const matchingAttrs = currentAttr => {
-          if (attr !== currentAttr) {
-            return currentAttr;
-          }
-        };
-
-        const isDefined = value => typeof value !== 'undefined';
-
-        const attrs = (
-          path.node.attributes
-            .map(matchingAttrs)
-            .filter(isDefined)
-        );
-
-        const node = t.jSXOpeningElement(
-          path.node.name,
-          attrs,
-          path.node.selfClosing
-        );
-        node.hasStripped = true;
-        path.replaceWith(node);
-      };
-
-      path.node.attributes
-        .filter(validTestIdAttributes)
-        .forEach(replaceClassNameValues);
     }
   };
 
