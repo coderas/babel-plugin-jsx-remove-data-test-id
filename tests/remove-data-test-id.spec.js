@@ -148,19 +148,19 @@ runTests(
     if (useErroneousAttributes) {
       plugins = [
         ['./src', { attributes }],
-        ["@babel/transform-react-jsx", { pragma: "j" }],
+        ["@babel/transform-react-jsx", { runtime: "classic", pragma: "j" }],
         ["@babel/transform-arrow-functions", {}]
       ]
     } else if (useValidAttributes) {
       plugins = [
         ['./src', { attributes: ['selenium-id', 'useless-attr'] }],
-        ["@babel/transform-react-jsx", { pragma: "j" }],
+        ["@babel/transform-react-jsx", { runtime: "classic", pragma: "j" }],
         ["@babel/transform-arrow-functions", {}]
       ]
     } else {
       plugins = [
         usePlugin && "./src",
-        ["@babel/transform-react-jsx", { pragma: "j" }],
+        ["@babel/transform-react-jsx", { runtime: "classic", pragma: "j" }],
         ["@babel/transform-arrow-functions", {}]
       ].filter(Boolean)
     }

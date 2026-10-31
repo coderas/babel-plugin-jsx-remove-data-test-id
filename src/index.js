@@ -20,7 +20,9 @@ const getAttributeIdentifiers = options => {
   return [options.attributes];
 }
 
-const RemoveDataTestIds = ({ types: t }, options) => {
+const RemoveDataTestIds = (api, options) => {
+  api.assertVersion('^7.0.0 || ^8.0.0');
+  const t = api.types;
   const attributeIdentifiers = getAttributeIdentifiers(options);
 
   const visitor = {
