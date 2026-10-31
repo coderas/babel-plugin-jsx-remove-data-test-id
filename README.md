@@ -126,6 +126,7 @@ The [examples](examples) folder has small projects that you can run:
 | [basic](examples/basic) | 8 | The default attributes, in JSX and in spread props |
 | [custom-attributes](examples/custom-attributes) | 8 | The `attributes` option |
 | [keep-in-tests](examples/keep-in-tests) | 8 | Production-only removal with Babel `env` |
+| [commonjs-config](examples/commonjs-config) | 8 | A CommonJS `babel.config.cjs` that loads the plugin with `require()` |
 | [babel-7](examples/babel-7) | 7 | The `basic` example with Babel 7 |
 
 To run an example:
@@ -142,14 +143,14 @@ npm test
 
 | Plugin version | Babel | Node.js |
 |---|---|---|
-| 3.x | 7 and 8 | 22 or later |
+| 3.x | 7 and 8 | 22.12 or later |
 | 2.x | 6 and 7 | any |
 
 ## Upgrading to 3.0
 
 - **Babel 7 and Babel 8.** Babel 6 is not supported. If you use Babel 6, stay on 2.x.
-- **Node.js 22 or later.** CI tests Node.js 22, 24 and 26.
-- **The package entry moved** from `lib/index.js` to `src/index.js`. If you load the plugin by its package name, nothing changes. If you import `babel-plugin-jsx-remove-data-test-id/lib/index.js` directly, use the package name instead.
+- **Node.js 22.12 or later.** CI tests Node.js 22, 24 and 26.
+- **The package is an ES module.** The entry moved from `lib/index.js` to `src/index.js`. If you load the plugin by its package name, nothing changes. A CommonJS Babel config can also pass `require('babel-plugin-jsx-remove-data-test-id')` to Babel, because Node.js 22.12 and later can `require()` an ES module. If you call the plugin function yourself from CommonJS, use `require(...).default`. If you import `babel-plugin-jsx-remove-data-test-id/lib/index.js` directly, use the package name instead.
 - **Invalid options fail earlier.** The plugin checks the `attributes` option when Babel loads it, so an invalid value fails for every file, not only for files that contain a matching attribute.
 - **TSX type arguments are kept.** In 2.x, `<Select<Option> data-test-id="x" />` became `<Select />`. In 3.x, it becomes `<Select<Option> />`.
 - The attributes that the plugin removes do not change.
@@ -161,7 +162,7 @@ npm install
 npm test
 ```
 
-The tests use the Node.js test runner (`node:test`). The plugin has no build step: the package ships `src/index.js`.
+The tests use the Node.js test runner (`node:test`). The plugin has no build step: the package ships `src/index.js` as an ES module.
 
 The tests run every case on Babel 7 and Babel 8. CI runs the tests and the examples on Node.js 22, 24 and 26.
 
