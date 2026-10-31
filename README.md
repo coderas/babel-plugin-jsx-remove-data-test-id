@@ -29,6 +29,7 @@ A Babel plugin that removes test attributes such as `data-test-id` and `data-tes
 - [What is removed](#what-is-removed)
 - [Examples](#examples)
 - [Compatibility](#compatibility)
+- [Upgrading to 3.0](#upgrading-to-30)
 - [Development](#development)
 - [License](#license)
 
@@ -113,11 +114,9 @@ The [examples](examples) folder has small projects that you can run:
 | [custom-attributes](examples/custom-attributes) | The `attributes` option |
 | [keep-in-tests](examples/keep-in-tests) | Production-only removal with Babel `env` |
 
-To run an example, build the plugin first:
+To run an example:
 
 ```bash
-npm install
-npm run build
 cd examples/basic
 npm install
 npm test
@@ -127,22 +126,30 @@ npm test
 
 ## Compatibility
 
-| Plugin version | Babel |
-|---|---|
-| 3.x | 7 |
-| 2.x | 6 and 7 |
+| Plugin version | Babel | Node.js |
+|---|---|---|
+| 3.x | 7 and 8 | 22 or later |
+| 2.x | 6 and 7 | any |
 
-Version 3.0.0 ends Babel 6 support. If you use Babel 6, use version 2.x.
+## Upgrading to 3.0
+
+- **Babel 7 and Babel 8.** Babel 6 is not supported. If you use Babel 6, stay on 2.x.
+- **Node.js 22 or later.** CI tests Node.js 22, 24 and 26.
+- **The package entry moved** from `lib/index.js` to `src/index.js`. If you load the plugin by its package name, nothing changes. If you import `babel-plugin-jsx-remove-data-test-id/lib/index.js` directly, use the package name instead.
+- **Invalid options fail earlier.** The plugin checks the `attributes` option when Babel loads it, so an invalid value fails for every file, not only for files that contain a matching attribute.
+- **TSX type arguments are kept.** In 2.x, `<Select<Option> data-test-id="x" />` became `<Select />`. In 3.x, it becomes `<Select<Option> />`.
+- The attributes that the plugin removes do not change.
 
 ## Development
 
 ```bash
 npm install
 npm test
-npm run build
 ```
 
-CI runs the tests, the build and the examples on Node 20, 22 and 24.
+The tests use the Node.js test runner (`node:test`). The plugin has no build step: the package ships `src/index.js`.
+
+CI runs the tests with Babel 7 and Babel 8, and the examples, on Node.js 22, 24 and 26.
 
 ## License
 
