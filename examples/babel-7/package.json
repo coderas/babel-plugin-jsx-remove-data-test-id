@@ -11,5 +11,6 @@
     "@babel/core": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
     "babel-plugin-jsx-remove-data-test-id": "file:../.."
-  }
+  },
+  "type": "module"
 }

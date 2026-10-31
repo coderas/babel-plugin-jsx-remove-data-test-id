@@ -11,5 +11,6 @@
     "@babel/core": "^8.0.10",
     "@babel/preset-react": "^8.0.1",
     "babel-plugin-jsx-remove-data-test-id": "file:../.."
-  }
+  },
+  "type": "module"
 }

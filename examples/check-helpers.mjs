@@ -1,13 +1,13 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
 
-const readOutput = dir =>
+export const readOutput = dir =>
   fs
     .readdirSync(dir)
     .map(file => fs.readFileSync(path.join(dir, file), 'utf8'))
     .join('\n');
 
-const assertRemoved = (output, attributes) => {
+export const assertRemoved = (output, attributes) => {
   attributes.forEach(attribute => {
     if (output.includes(`"${attribute}"`)) {
       throw new Error(`${attribute} was not removed`);
@@ -15,12 +15,10 @@ const assertRemoved = (output, attributes) => {
   });
 };
 
-const assertKept = (output, attributes) => {
+export const assertKept = (output, attributes) => {
   attributes.forEach(attribute => {
     if (!output.includes(attribute)) {
       throw new Error(`${attribute} was removed`);
     }
   });
 };
-
-module.exports = { readOutput, assertRemoved, assertKept };

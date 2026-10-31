@@ -1,4 +1,4 @@
-const { readOutput, assertRemoved, assertKept } = require('../check-helpers');
+import { readOutput, assertRemoved, assertKept } from '../check-helpers.mjs';
 
 const output = readOutput('dist');
 assertRemoved(output, ['data-cy', 'data-qa']);
