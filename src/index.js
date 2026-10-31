@@ -52,5 +52,4 @@ const RemoveDataTestIds = (api, options) => {
   };
 };
 
-module.exports = RemoveDataTestIds;
-module.exports.default = RemoveDataTestIds;
+export default RemoveDataTestIds;

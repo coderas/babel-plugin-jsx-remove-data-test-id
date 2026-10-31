@@ -1,7 +1,7 @@
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const babel7 = require('@babel/core');
-const babel8 = require('babel-8-core');
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import babel7 from '@babel/core';
+import * as babel8 from 'babel-8-core';
 
 const runTests = (label, transform) => {
   describe(label, () => {

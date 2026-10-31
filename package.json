@@ -34,7 +34,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   },
   "repository": {
     "type": "git",
@@ -43,5 +43,6 @@
   "bugs": {
     "url": "https://github.com/coderas/babel-plugin-jsx-remove-data-test-id/issues"
   },
-  "homepage": "https://github.com/coderas/babel-plugin-jsx-remove-data-test-id#readme"
+  "homepage": "https://github.com/coderas/babel-plugin-jsx-remove-data-test-id#readme",
+  "type": "module"
 }
