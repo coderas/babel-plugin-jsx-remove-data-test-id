@@ -85,4 +85,5 @@ const RemoveDataTestIds = ({ types: t }) => {
   };
 };
 
-export default RemoveDataTestIds;
+module.exports = RemoveDataTestIds;
+module.exports.default = RemoveDataTestIds;

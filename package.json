@@ -2,7 +2,7 @@
   "name": "babel-plugin-jsx-remove-data-test-id",
   "version": "3.0.0",
   "description": "babel plugin to remove data-test-id attributes",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "keywords": [
     "babel",
     "plugin",
@@ -20,8 +20,6 @@
   ],
   "repository": "git://github.com/coderas/babel-plugin-jsx-remove-data-test-id.git",
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "prepare": "npm test && npm run build",
     "test": "mocha \"tests/**/*.spec.js\" --require @babel/register --reporter spec"
   },
   "author": "Rich Gorman",
@@ -30,7 +28,6 @@
     "@babel/core": "^7.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-arrow-functions": "^7.2.0",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
@@ -39,5 +36,8 @@
     "chai": "^3.5.0",
     "mocha": "^12.0.3",
     "uglify-js": "^2.7.3"
-  }
+  },
+  "files": [
+    "src"
+  ]
 }

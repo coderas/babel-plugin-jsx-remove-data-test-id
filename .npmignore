@@ -1,8 +1,0 @@
-tests
-src
-.gitignore
-node_modules
-.idea
-.babelrc
-examples
-.github
