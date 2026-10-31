@@ -49,6 +49,8 @@ These attributes have no use in production. This plugin removes them at build ti
 npm install --save-dev babel-plugin-jsx-remove-data-test-id
 ```
 
+The plugin works with Babel 7 and Babel 8 (`@babel/core` `^7.0.0 || ^8.0.0`). It uses the Babel version that your project has installed.
+
 ## Usage
 
 Add the plugin to your Babel config, for example `babel.config.json`:
@@ -60,6 +62,17 @@ Add the plugin to your Babel config, for example `babel.config.json`:
 ```
 
 By default, the plugin removes `data-test-id` and `data-testid` (the attribute that [React Testing Library](https://testing-library.com/docs/queries/bytestid) uses).
+
+The plugin config is the same for Babel 7 and Babel 8. The JSX preset config is different: in Babel 8, `@babel/preset-react` uses the automatic JSX runtime by default. In Babel 7, you must set it:
+
+```json
+{
+  "presets": [["@babel/preset-react", { "runtime": "automatic" }]],
+  "plugins": ["babel-plugin-jsx-remove-data-test-id"]
+}
+```
+
+The plugin works with the classic runtime and with the automatic runtime.
 
 ## Keep test ids in your tests
 
@@ -108,11 +121,12 @@ The plugin does not change values at runtime. For example, it cannot remove an a
 
 The [examples](examples) folder has small projects that you can run:
 
-| Example | Shows |
-|---|---|
-| [basic](examples/basic) | The default attributes, in JSX and in spread props |
-| [custom-attributes](examples/custom-attributes) | The `attributes` option |
-| [keep-in-tests](examples/keep-in-tests) | Production-only removal with Babel `env` |
+| Example | Babel | Shows |
+|---|---|---|
+| [basic](examples/basic) | 8 | The default attributes, in JSX and in spread props |
+| [custom-attributes](examples/custom-attributes) | 8 | The `attributes` option |
+| [keep-in-tests](examples/keep-in-tests) | 8 | Production-only removal with Babel `env` |
+| [babel-7](examples/babel-7) | 7 | The `basic` example with Babel 7 |
 
 To run an example:
 
