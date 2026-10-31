@@ -167,3 +167,16 @@ runTests(
     return babel7.transformSync(code, { plugins }).code;
   }
 );
+
+describe('typescript', () => {
+  const transformTsx = (code, plugins) => babel7.transformSync(code, {
+    plugins,
+    parserOpts: { plugins: ['jsx', 'typescript'] }
+  }).code;
+
+  it('keeps type arguments on elements that lose a data-test-id', () => {
+    const actual = transformTsx('<Select<Option> data-test-id="select" value={value} />', ['./src']);
+    const expected = transformTsx('<Select<Option> value={value} />', []);
+    assert.equal(actual, expected);
+  });
+});
