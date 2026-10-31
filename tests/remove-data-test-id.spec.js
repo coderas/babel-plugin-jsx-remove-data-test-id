@@ -1,11 +1,6 @@
-import * as babel7 from '@babel/core';
-import { expect } from 'chai';
-import { minify } from 'uglify-js';
-
-const uglify = code => minify(code, {
-  fromString: true,
-  mangle: false
-}).code;
+const { describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+const babel7 = require('@babel/core');
 
 const runTests = (label, transform) => {
   describe(label, () => {
@@ -14,14 +9,14 @@ const runTests = (label, transform) => {
         const code = '<p data-something-else="cake-day">hi, finally it is cake time</p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(code);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('does not remove attributes that contain "data-test-id" in part only', () => {
         const code = '<p data-test-id-not="not-test-id">hi, finally it is cake time</p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(code);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id', () => {
@@ -29,7 +24,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id funcs', () => {
@@ -37,7 +32,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id bools', () => {
@@ -45,7 +40,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       });
 
       it('removes data-test-id properties from objects and their nested objects', () => {
@@ -53,7 +48,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{something: "else"}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
       
       it('removes data-test-id properties from nested objects', () => {
@@ -61,7 +56,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{nested:{}}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
 
       it('does not remove empty object expressions and their relative JSX attributes', () => {
@@ -69,7 +64,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
       
       it('does not remove properties that contain "data-test-id" in part only', () => {
@@ -77,7 +72,7 @@ const runTests = (label, transform) => {
         const expectedCode = '<p object={{"data-test-id-not": "test-id", nestedObj:{"data-test-id-not": "test-id"}}}></p>';
         const actual = transform(code, { usePlugin: true });
         const expected = transform(expectedCode);
-        expect(uglify(actual)).to.equal(uglify(expected));
+        assert.equal(actual, expected);
       })
       
       describe('with invalid options.attributes', () => {
@@ -88,7 +83,7 @@ const runTests = (label, transform) => {
             useErroneousAttributes: true,
             attributes: ''
           });
-          expect(action).to.throw();
+          assert.throws(action);
         });
 
         it('throws error when attributes is empty array', () => {
@@ -98,7 +93,7 @@ const runTests = (label, transform) => {
             useErroneousAttributes: true,
             attributes: []
           });
-          expect(action).to.throw();
+          assert.throws(action);
         });
       })
 
@@ -107,7 +102,7 @@ const runTests = (label, transform) => {
           const code = '<p selenium-id-not="not-test-id" no-useless-attr="useless">hi, finally it is cake time</p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(code);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
 
         it('removes options.attributes', () => {
@@ -115,7 +110,7 @@ const runTests = (label, transform) => {
           const expectedCode = '<p></p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
 
         it('removes options.attributes funcs', () => {
@@ -123,7 +118,7 @@ const runTests = (label, transform) => {
           const expectedCode = '<p></p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
 
         it('removes options.attributes bools', () => {
@@ -131,7 +126,7 @@ const runTests = (label, transform) => {
           const expectedCode = '<p></p>';
           const actual = transform(code, { useValidAttributes: true });
           const expected = transform(expectedCode);
-          expect(uglify(actual)).to.equal(uglify(expected));
+          assert.equal(actual, expected);
         });
       })
     });
