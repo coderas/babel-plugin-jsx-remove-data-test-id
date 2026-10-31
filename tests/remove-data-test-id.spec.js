@@ -1,6 +1,7 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const babel7 = require('@babel/core');
+const babel8 = require('babel-8-core');
 
 const runTests = (label, transform) => {
   describe(label, () => {
@@ -133,50 +134,45 @@ const runTests = (label, transform) => {
   })
 }
 
-runTests(
-  "babel7",
-  (
-    code,
-    {
-      useErroneousAttributes = false,
-      useValidAttributes = false,
-      usePlugin = false,
-      attributes
-    } = {}
-  ) => {
-    let plugins
-    if (useErroneousAttributes) {
-      plugins = [
-        ['./src', { attributes }],
-        ["@babel/transform-react-jsx", { runtime: "classic", pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
-      ]
-    } else if (useValidAttributes) {
-      plugins = [
-        ['./src', { attributes: ['selenium-id', 'useless-attr'] }],
-        ["@babel/transform-react-jsx", { runtime: "classic", pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
-      ]
-    } else {
-      plugins = [
-        usePlugin && "./src",
-        ["@babel/transform-react-jsx", { runtime: "classic", pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
-      ].filter(Boolean)
+const babels = [
+  ['babel 7', babel7],
+  ['babel 8', babel8]
+];
+
+babels.forEach(([label, babel]) => {
+  runTests(
+    label,
+    (
+      code,
+      {
+        useErroneousAttributes = false,
+        useValidAttributes = false,
+        usePlugin = false,
+        attributes
+      } = {}
+    ) => {
+      let plugins = [];
+      if (useErroneousAttributes) {
+        plugins = [['./src', { attributes }]];
+      } else if (useValidAttributes) {
+        plugins = [['./src', { attributes: ['selenium-id', 'useless-attr'] }]];
+      } else if (usePlugin) {
+        plugins = ['./src'];
+      }
+      return babel.transformSync(code, { plugins, parserOpts: { plugins: ['jsx'] } }).code;
     }
-    return babel7.transformSync(code, { plugins }).code;
-  }
-);
+  );
 
-describe('typescript', () => {
-  const transformTsx = (code, plugins) => babel7.transformSync(code, {
-    plugins,
-    parserOpts: { plugins: ['jsx', 'typescript'] }
-  }).code;
+  describe(`${label} typescript`, () => {
+    const transformTsx = (code, plugins) => babel.transformSync(code, {
+      plugins,
+      parserOpts: { plugins: ['jsx', 'typescript'] }
+    }).code;
 
-  it('keeps type arguments on elements that lose a data-test-id', () => {
-    const actual = transformTsx('<Select<Option> data-test-id="select" value={value} />', ['./src']);
-    const expected = transformTsx('<Select<Option> value={value} />', []);
-    assert.equal(actual, expected);
+    it('keeps type arguments on elements that lose a data-test-id', () => {
+      const actual = transformTsx('<Select<Option> data-test-id="select" value={value} />', ['./src']);
+      const expected = transformTsx('<Select<Option> value={value} />', []);
+      assert.equal(actual, expected);
+    });
   });
 });

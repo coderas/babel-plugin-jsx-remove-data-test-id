@@ -28,8 +28,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
-    "@babel/plugin-transform-arrow-functions": "^7.2.0",
-    "@babel/plugin-transform-react-jsx": "^7.3.0"
+    "babel-8-core": "npm:@babel/core@^8.0.10"
   },
   "files": [
     "src"
